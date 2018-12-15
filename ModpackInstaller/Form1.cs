@@ -10,6 +10,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace ModpackInstaller
 {
@@ -49,6 +50,14 @@ namespace ModpackInstaller
             ZipFile.ExtractToDirectory(textBox1.Text, textBox2.Text);
             string json = System.IO.File.ReadAllText(textBox2.Text + "//modlist.json");
             dynamic dynJson = JsonConvert.DeserializeObject(json);
+                // Determine whether the directory exists.
+                if (Directory.Exists(textBox2.Text + "\\mods"))
+                {
+                    Console.WriteLine("That path exists already.");
+                    return;
+                }
+            // Try to create the directory.
+            Directory.CreateDirectory(textBox2.Text + "\\mods");
             foreach (var item in dynJson)
             {
                 using (var client = new WebClient())
